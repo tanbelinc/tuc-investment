@@ -23,6 +23,7 @@
   }
 
   html { scroll-behavior: smooth; }
+  section[id] { scroll-margin-top: 80px; }
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--cream);
@@ -230,7 +231,7 @@
      NAV
   ═══════════════════════════════════════ */
   nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 101;
     display: flex; align-items: center; justify-content: space-between;
     padding: 20px 60px;
     background: rgba(15,30,53,0.92);
@@ -388,29 +389,206 @@
   .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
+
+  /* ─── VISUALIZATION PANELS ─── */
+  .vis-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .vis-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(196,150,42,0.18); border-radius: 8px; overflow: hidden; transition: all 0.3s; cursor: default; }
+
+
+  /* ─── HERO TWO-COLUMN ─── */
+  .hero { padding: 140px 60px 80px; }
+  .hero-inner {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+    align-items: center; max-width: 1300px; width: 100%;
+  }
+  .hero-right {
+    position: relative; height: 500px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .prop-stage { position: relative; width: 100%; height: 100%; }
+  /* Glow orb */
+  .prop-glow {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 360px; height: 360px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(196,150,42,0.13) 0%, transparent 68%);
+    pointer-events: none;
+    animation: glowPulse 3s ease-in-out infinite;
+  }
+  @keyframes glowPulse { 0%,100%{opacity:1;transform:translate(-50%,-50%) scale(1);} 50%{opacity:0.6;transform:translate(-50%,-50%) scale(1.08);} }
+  /* Floating metric cards */
+  .fc {
+    position: absolute;
+    background: rgba(10,20,38,0.88);
+    border: 1px solid rgba(196,150,42,0.28);
+    border-radius: 8px; padding: 16px 20px;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  }
+  .fc-val { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:var(--gold); line-height:1; margin-bottom:5px; }
+  .fc-lbl { font-size:10px; color:rgba(255,255,255,0.42); letter-spacing:0.14em; text-transform:uppercase; }
+  .fc1 { top:18px; left:0; animation: floatA 4s ease-in-out infinite; }
+  .fc2 { top:12px; right:0; animation: floatB 4.4s ease-in-out infinite; }
+  .fc3 { bottom:105px; left:0; animation: floatA 5s ease-in-out infinite 0.8s; }
+  .fc4 { bottom:115px; right:0; animation: floatB 3.8s ease-in-out infinite 0.4s; }
+  @keyframes floatA { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
+  @keyframes floatB { 0%,100%{transform:translateY(-4px);} 50%{transform:translateY(4px);} }
+  /* Central SVG house */
+  .prop-center {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -56%);
+  }
+  /* Progress bar */
+  .prop-bar {
+    position: absolute; bottom: 20px; left: 16px; right: 16px;
+    background: rgba(10,20,38,0.88);
+    border: 1px solid rgba(196,150,42,0.22);
+    border-radius: 8px; padding: 14px 18px;
+    backdrop-filter: blur(12px);
+  }
+  .pb-head { display:flex; justify-content:space-between; margin-bottom:8px; }
+  .pb-head span { font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.38); }
+  .pb-head span:last-child { color:var(--gold); }
+  .pb-track { height:4px; background:rgba(255,255,255,0.07); border-radius:2px; overflow:hidden; }
+  .pb-fill {
+    height:100%; width:28%;
+    background:linear-gradient(90deg,var(--gold),var(--gold-light));
+    border-radius:2px; animation: pbPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pbPulse { 0%,100%{opacity:1;} 50%{opacity:0.65;} }
+  /* Dot grid backdrop inside hero-right */
+  .prop-dots {
+    position:absolute; inset:0; pointer-events:none;
+    background-image: radial-gradient(circle, rgba(196,150,42,0.18) 1px, transparent 1px);
+    background-size: 28px 28px; border-radius:12px;
+    mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black 40%, transparent 100%);
+  }
+  /* Hamburger */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 8px 4px;
+    background: none;
+    border: none;
+    z-index: 101;
+  }
+  .hamburger span { display:block; width:24px; height:2px; background:white; border-radius:2px; transition:all 0.3s; }
+  .hamburger.open span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+  .hamburger.open span:nth-child(2) { opacity:0; }
+  .hamburger.open span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 72px; left: 0; right: 0;
+    background: rgba(6, 14, 30, 0.98);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(196,150,42,0.25);
+    z-index: 100;
+    padding: 24px 24px 32px;
+    flex-direction: column;
+    gap: 2px;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+  }
+  .mobile-menu.open { display:flex; }
+  .mobile-menu a {
+    color:rgba(255,255,255,0.72); text-decoration:none; font-size:16px;
+    padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06);
+    font-family:'DM Sans',sans-serif; transition:color 0.2s;
+  }
+  .mobile-menu a:hover { color:var(--gold); }
+  .mobile-menu a:last-of-type { border-bottom:none; }
+  .mobile-menu .mob-cta {
+    margin-top:16px; background:var(--gold); color:var(--navy);
+    padding:15px 24px; border-radius:2px; text-align:center;
+    font-size:13px; font-weight:500; letter-spacing:0.1em;
+    text-transform:uppercase; border:none; cursor:pointer;
+    font-family:'DM Sans',sans-serif; width:100%;
+  }
+
   /* RESPONSIVE */
   @media (max-width: 900px) {
-    nav { padding: 16px 24px; }
+    /* — NAV — */
+    nav { padding: 14px 20px; }
     .nav-links { display: none; }
-    section { padding: 72px 24px; }
-    .hero { padding: 120px 24px 60px; }
-    .hero-stats { gap: 32px; flex-wrap: wrap; }
-    .about-inner, .share-inner { grid-template-columns: 1fr; gap: 48px; }
-    .about-visual { height: 320px; }
+    .hamburger { display: flex !important; }
+
+    /* — HERO — */
+    section { padding: 64px 20px; }
+    .hero { padding: 100px 20px 52px; overflow: hidden; }
+    .hero-inner { grid-template-columns: 1fr; gap: 32px; }
+    .hero h1 { font-size: clamp(36px, 10vw, 52px); }
+    .hero-sub { font-size: 15px; max-width: 100%; }
+    .hero-actions { flex-direction: column; gap: 12px; }
+    .hero-actions button { width: 100%; text-align: center; }
+    .hero-stats { gap: 24px; flex-wrap: wrap; padding-top: 28px; margin-top: 36px; }
+    .stat-val { font-size: 26px; }
+    .stat-label { font-size: 10px; }
+
+    /* — HERO VISUAL (right side) — */
+    .hero-right {
+      height: 280px;
+      overflow: hidden;
+      margin: 0 -20px;
+      padding: 0 20px;
+      position: relative;
+    }
+    .prop-stage { overflow: hidden; }
+    .prop-center { transform: translate(-50%, -60%) scale(0.72); }
+    .prop-glow { width: 240px; height: 240px; }
+    .prop-dots { display: none; }
+    /* Cards: reposition to fit within mobile bounds */
+    .fc { padding: 10px 14px; min-width: 0; }
+    .fc-val { font-size: 15px; }
+    .fc-lbl { font-size: 8px; letter-spacing: 0.1em; }
+    .fc1 { top: 6px; left: 4px; }
+    .fc2 { top: 6px; right: 4px; }
+    .fc3 { display: none; }
+    .fc4 { display: none; }
+    .prop-bar { left: 4px; right: 4px; bottom: 4px; }
+
+    /* — SECTIONS — */
+    .about-inner, .share-inner { grid-template-columns: 1fr; gap: 40px; }
+    .about-visual { height: 260px; }
     .about-card-float { right: 0; }
-    .values-grid { grid-template-columns: repeat(2, 1fr); }
+    .values-header, .strategy-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .strategy-header p { max-width: 100%; }
+    .values-grid { grid-template-columns: 1fr 1fr; gap: 2px; }
+    .value-card { padding: 28px 16px; }
+    .value-num { font-size: 34px; }
     .phases { grid-template-columns: 1fr; }
-    .longterm-grid { grid-template-columns: repeat(2, 1fr); }
-    .board { grid-template-columns: repeat(2, 1fr); }
-    .values-header, .strategy-header { flex-direction: column; align-items: flex-start; gap: 16px; }
-    footer { flex-direction: column; gap: 24px; text-align: center; }
-    .f-links { flex-wrap: wrap; justify-content: center; }
-    .modal-panel { grid-template-columns: 1fr; }
+    .longterm-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .lt-card { padding: 20px 16px; }
+    .board { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .board-card { padding: 20px 16px; }
+    .vis-grid { grid-template-columns: 1fr; }
+
+    /* — SHARE / INVEST — */
+    .share-card { padding: 28px 20px; }
+    .share-row-val { font-size: 20px; }
+
+    /* — MODAL — */
+    .modal-panel { grid-template-columns: 1fr; max-height: 94vh; }
     .modal-sidebar { display: none; }
-    .modal-form-wrap { padding: 48px 28px; }
+    .modal-form-wrap { padding: 44px 20px 32px; }
     .shares-select { grid-template-columns: repeat(2, 1fr); }
     .form-row { grid-template-columns: 1fr; }
-    .cta-banner { padding: 72px 24px; }
+    .form-tabs { flex-wrap: wrap; gap: 2px; }
+    .form-tab { font-size: 10px; padding: 8px 6px; }
+
+    /* — CTA / FOOTER — */
+    .cta-banner { padding: 64px 20px; }
+    footer { flex-direction: column; gap: 20px; text-align: center; padding: 40px 20px; }
+    .f-links { flex-wrap: wrap; justify-content: center; gap: 14px; }
+  }
+  @media (max-width: 480px) {
+    .hero-right { height: 240px; }
+    .prop-center { transform: translate(-50%, -60%) scale(0.6); }
+    .values-grid { grid-template-columns: 1fr; }
+    .longterm-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: clamp(32px, 9vw, 44px); }
   }
 </style>
 </head>
@@ -668,7 +846,17 @@
     <a href="#leadership">Leadership</a>
     <button class="nav-cta" onclick="openModal('investor')">Get Started</button>
   </div>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="toggleMenu()">About</a>
+  <a href="#strategy" onclick="toggleMenu()">Strategy</a>
+  <a href="#invest" onclick="toggleMenu()">Invest</a>
+  <a href="#leadership" onclick="toggleMenu()">Leadership</a>
+  <button class="mob-cta" onclick="toggleMenu(); openModal('investor')">Get Started</button>
+</div>
 
 <!-- ═══════════════════════════════════════════════
      HERO
@@ -677,18 +865,109 @@
   <div class="hero-grid"></div>
   <div class="hero-glow"></div>
   <div class="hero-glow2"></div>
-  <div class="hero-tag">Halal Investment · Ethical Growth</div>
-  <h1>Invest the <em>Halal</em> way.<br/>Build a better tomorrow.</h1>
-  <p class="hero-sub">Team United Corporation is a Shariah-compliant real estate investment company built for the Muslim community—without compromise.</p>
-  <div class="hero-actions">
-    <button class="btn-primary" onclick="openModal('investor')">Start Investing</button>
-    <button class="btn-outline" onclick="openModal('contact')">Learn More</button>
-  </div>
-  <div class="hero-stats">
-    <div><div class="stat-val">100</div><div class="stat-label">Shares Available</div></div>
-    <div><div class="stat-val">$10K</div><div class="stat-label">Per Share</div></div>
-    <div><div class="stat-val">$1M</div><div class="stat-label">Total Capital Target</div></div>
-    <div><div class="stat-val">0%</div><div class="stat-label">Interest (Riba-Free)</div></div>
+  <div class="hero-inner">
+    <!-- LEFT: Text content -->
+    <div class="hero-content">
+      <div class="hero-tag">Halal Investment · Ethical Growth</div>
+      <h1>Invest the <em>Halal</em> way.<br/>Build a better tomorrow.</h1>
+      <p class="hero-sub">Team United Corporation is a Shariah-compliant real estate investment company built for the Muslim community—without compromise.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="openModal('investor')">Start Investing</button>
+        <button class="btn-outline" onclick="openModal('contact')">Learn More</button>
+      </div>
+      <div class="hero-stats">
+        <div><div class="stat-val">100</div><div class="stat-label">Shares Available</div></div>
+        <div><div class="stat-val">$10K</div><div class="stat-label">Per Share</div></div>
+        <div><div class="stat-val">$1M</div><div class="stat-label">Capital Target</div></div>
+        <div><div class="stat-val">0%</div><div class="stat-label">Riba-Free</div></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Property visual -->
+    <div class="hero-right">
+      <div class="prop-stage">
+        <div class="prop-dots"></div>
+        <div class="prop-glow"></div>
+
+        <!-- Floating card: Shariah ✓ -->
+        <div class="fc fc1">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
+            <div style="width:20px;height:20px;border-radius:50%;background:rgba(74,222,128,0.18);border:1px solid rgba(74,222,128,0.5);display:flex;align-items:center;justify-content:center;font-size:11px;color:#4ade80;flex-shrink:0;">✓</div>
+            <div class="fc-val" style="font-size:14px;color:#4ade80;">Shariah</div>
+          </div>
+          <div class="fc-lbl">Compliant &amp; Riba-Free</div>
+        </div>
+
+        <!-- Floating card: Shares -->
+        <div class="fc fc2">
+          <div class="fc-val">100</div>
+          <div class="fc-lbl">Shares Available</div>
+        </div>
+
+        <!-- Floating card: Price -->
+        <div class="fc fc3">
+          <div class="fc-val">$10K</div>
+          <div class="fc-lbl">Per Share</div>
+        </div>
+
+        <!-- Floating card: Structure -->
+        <div class="fc fc4">
+          <div class="fc-val" style="font-size:17px;">S-Corp</div>
+          <div class="fc-lbl">Tax Advantages</div>
+        </div>
+
+        <!-- Central house SVG -->
+        <div class="prop-center">
+          <svg viewBox="0 0 270 248" xmlns="http://www.w3.org/2000/svg" style="width:270px;height:248px;filter:drop-shadow(0 24px 48px rgba(196,150,42,0.28));">
+            <!-- Shadow -->
+            <ellipse cx="135" cy="240" rx="98" ry="7" fill="rgba(0,0,0,0.28)"/>
+            <!-- Left block (navy) -->
+            <rect x="28" y="122" width="66" height="106" fill="#1a2f4e" rx="1"/>
+            <!-- Right block (navy) -->
+            <rect x="176" y="122" width="66" height="106" fill="#1a2f4e" rx="1"/>
+            <!-- Center notch (darker) -->
+            <rect x="94" y="158" width="82" height="70" fill="#0f1e35"/>
+            <!-- Gold arrow shaft -->
+            <rect x="113" y="78" width="44" height="92" fill="#c4962a"/>
+            <!-- Gold arrowhead / roof -->
+            <polygon points="44,122 135,28 226,122" fill="#c4962a"/>
+            <!-- Roof highlight -->
+            <polygon points="44,122 135,28 90,122" fill="rgba(255,255,255,0.07)"/>
+            <!-- Ridge line -->
+            <line x1="135" y1="28" x2="135" y2="48" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
+            <!-- Left window -->
+            <rect x="40" y="142" width="30" height="22" fill="rgba(196,150,42,0.28)" rx="2"/>
+            <line x1="55" y1="142" x2="55" y2="164" stroke="rgba(196,150,42,0.45)" stroke-width="1"/>
+            <line x1="40" y1="153" x2="70" y2="153" stroke="rgba(196,150,42,0.45)" stroke-width="1"/>
+            <!-- Right window -->
+            <rect x="200" y="142" width="30" height="22" fill="rgba(196,150,42,0.28)" rx="2"/>
+            <line x1="215" y1="142" x2="215" y2="164" stroke="rgba(196,150,42,0.45)" stroke-width="1"/>
+            <line x1="200" y1="153" x2="230" y2="153" stroke="rgba(196,150,42,0.45)" stroke-width="1"/>
+            <!-- Left block second row windows -->
+            <rect x="40" y="176" width="30" height="20" fill="rgba(196,150,42,0.18)" rx="2"/>
+            <rect x="200" y="176" width="30" height="20" fill="rgba(196,150,42,0.18)" rx="2"/>
+            <!-- Sparkle dots -->
+            <circle cx="88" cy="88" r="3.5" fill="rgba(196,150,42,0.55)"/>
+            <circle cx="182" cy="88" r="3.5" fill="rgba(196,150,42,0.55)"/>
+            <circle cx="72" cy="108" r="2.5" fill="rgba(196,150,42,0.38)"/>
+            <circle cx="198" cy="108" r="2.5" fill="rgba(196,150,42,0.38)"/>
+            <circle cx="60" cy="126" r="2" fill="rgba(196,150,42,0.25)"/>
+            <circle cx="210" cy="126" r="2" fill="rgba(196,150,42,0.25)"/>
+            <!-- Ring around base -->
+            <rect x="28" y="226" width="214" height="4" rx="2" fill="rgba(196,150,42,0.22)"/>
+          </svg>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="prop-bar">
+          <div class="pb-head">
+            <span>Capital Target Progress</span>
+            <span>$1,000,000</span>
+          </div>
+          <div class="pb-track"><div class="pb-fill"></div></div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -856,6 +1135,343 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════
+     VISION ILLUSTRATIONS
+═══════════════════════════════════════════════ -->
+<section style="background:var(--navy); padding:100px 60px; overflow:hidden; position:relative;">
+  <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(196,150,42,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(196,150,42,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;"></div>
+  <div style="max-width:1200px;margin:0 auto;position:relative;">
+    <div style="text-align:center;margin-bottom:72px;">
+      <div class="section-tag reveal" style="justify-content:center;">Vision in Action</div>
+      <h2 class="reveal" style="color:white;margin-bottom:16px;">Where <em>Faith Meets Finance</em></h2>
+      <p class="reveal" style="color:rgba(255,255,255,0.45);max-width:520px;margin:0 auto;font-size:16px;line-height:1.75;font-weight:300;">From cross-cultural partnerships to thriving communities — this is the TUC story unfolding.</p>
+    </div>
+    <div class="vis-grid reveal">
+
+      <!-- PANEL 1: HANDSHAKE DEAL -->
+      <div class="vis-card" onmouseover="this.style.borderColor='rgba(196,150,42,0.5)';this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.borderColor='rgba(196,150,42,0.18)';this.style.background='rgba(255,255,255,0.03)'">
+        <svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+          <defs>
+            <radialGradient id="hglow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#c4962a" stop-opacity="0.45"/>
+              <stop offset="100%" stop-color="#c4962a" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect x="0" y="0" width="380" height="260" fill="rgba(8,15,28,0.35)"/>
+          <!-- Background buildings left -->
+          <rect x="5" y="128" width="30" height="94" fill="rgba(196,150,42,0.07)" rx="1"/>
+          <rect x="14" y="110" width="18" height="112" fill="rgba(196,150,42,0.09)" rx="1"/>
+          <rect x="37" y="140" width="24" height="82" fill="rgba(196,150,42,0.06)" rx="1"/>
+          <rect x="17" y="118" width="5" height="5" fill="rgba(196,150,42,0.22)"/>
+          <rect x="17" y="130" width="5" height="5" fill="rgba(196,150,42,0.16)"/>
+          <rect x="17" y="142" width="5" height="5" fill="rgba(196,150,42,0.22)"/>
+          <!-- Background buildings right -->
+          <rect x="320" y="132" width="30" height="90" fill="rgba(196,150,42,0.07)" rx="1"/>
+          <rect x="350" y="112" width="26" height="110" fill="rgba(196,150,42,0.09)" rx="1"/>
+          <rect x="353" y="120" width="5" height="5" fill="rgba(196,150,42,0.22)"/>
+          <rect x="361" y="120" width="5" height="5" fill="rgba(196,150,42,0.16)"/>
+          <rect x="353" y="133" width="5" height="5" fill="rgba(196,150,42,0.2)"/>
+          <!-- Ground -->
+          <line x1="0" y1="222" x2="380" y2="222" stroke="rgba(196,150,42,0.28)" stroke-width="1"/>
+          <rect x="0" y="222" width="380" height="38" fill="rgba(6,12,26,0.5)"/>
+
+          <!-- ARAB FIGURE (left) wearing thobe + keffiyeh -->
+          <!-- Keffiyeh cloth -->
+          <path d="M78,90 Q100,64 122,90 L129,118 L100,128 L71,118 Z" fill="#f0ece2"/>
+          <!-- Left draping tail -->
+          <path d="M71,118 L59,162 L72,165 L80,128 Z" fill="#ece8de"/>
+          <!-- Right tail -->
+          <path d="M129,118 L136,150 L126,153 L122,128 Z" fill="#e8e4da"/>
+          <!-- Keffiyeh subtle woven lines -->
+          <line x1="84" y1="102" x2="88" y2="118" stroke="rgba(140,90,0,0.1)" stroke-width="1"/>
+          <line x1="93" y1="100" x2="96" y2="118" stroke="rgba(140,90,0,0.1)" stroke-width="1"/>
+          <line x1="107" y1="100" x2="109" y2="118" stroke="rgba(140,90,0,0.1)" stroke-width="1"/>
+          <line x1="116" y1="102" x2="119" y2="118" stroke="rgba(140,90,0,0.1)" stroke-width="1"/>
+          <!-- Agal (black ring holding keffiyeh) -->
+          <ellipse cx="100" cy="88" rx="24" ry="7" fill="#111e33"/>
+          <ellipse cx="100" cy="87" rx="20" ry="5" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+          <!-- Face -->
+          <circle cx="100" cy="101" r="21" fill="#c8956a"/>
+          <!-- Eyes -->
+          <ellipse cx="93" cy="98" rx="2.5" ry="2" fill="#2a1a0a"/>
+          <ellipse cx="107" cy="98" rx="2.5" ry="2" fill="#2a1a0a"/>
+          <!-- Brow -->
+          <path d="M90,94 Q93,92 96,94" stroke="#2a1a0a" stroke-width="1.2" fill="none"/>
+          <path d="M104,94 Q107,92 110,94" stroke="#2a1a0a" stroke-width="1.2" fill="none"/>
+          <!-- Nose -->
+          <path d="M99,101 Q100,105 101,101" stroke="#a07050" stroke-width="1" fill="none"/>
+          <!-- Beard -->
+          <path d="M82,108 Q100,122 118,108 L118,114 Q100,128 82,114 Z" fill="#3d2810" opacity="0.88"/>
+          <!-- Thobe body (white robe) -->
+          <path d="M76,126 L63,222 L137,222 L124,126 Z" fill="#f5f2ea"/>
+          <!-- Thobe collar -->
+          <path d="M92,126 Q100,134 108,126" fill="none" stroke="#ddd8cc" stroke-width="1.5"/>
+          <!-- Thobe subtle folds -->
+          <line x1="88" y1="148" x2="81" y2="210" stroke="rgba(0,0,0,0.04)" stroke-width="1.5"/>
+          <line x1="112" y1="148" x2="119" y2="210" stroke="rgba(0,0,0,0.04)" stroke-width="1.5"/>
+          <!-- Left arm at side -->
+          <path d="M76,140 L63,183" stroke="#f5f2ea" stroke-width="14" stroke-linecap="round" fill="none"/>
+          <!-- Right arm extended -->
+          <path d="M124,135 Q157,148 186,160" stroke="#f5f2ea" stroke-width="14" stroke-linecap="round" fill="none"/>
+          <!-- Wrist/skin -->
+          <path d="M172,154 Q183,158 193,163" stroke="#c8956a" stroke-width="9" stroke-linecap="round" fill="none"/>
+
+          <!-- AMERICAN BUSINESSMAN (right) -->
+          <!-- Head -->
+          <circle cx="280" cy="101" r="21" fill="#c8956a"/>
+          <!-- Hair -->
+          <path d="M261,95 Q280,74 299,95 L299,91 Q280,70 261,91 Z" fill="#2a1a0a"/>
+          <!-- Eyes -->
+          <ellipse cx="273" cy="98" rx="2.5" ry="2" fill="#2a1a0a"/>
+          <ellipse cx="287" cy="98" rx="2.5" ry="2" fill="#2a1a0a"/>
+          <!-- Brow -->
+          <path d="M270,94 Q273,92 276,94" stroke="#2a1a0a" stroke-width="1.2" fill="none"/>
+          <path d="M284,94 Q287,92 290,94" stroke="#2a1a0a" stroke-width="1.2" fill="none"/>
+          <!-- Suit jacket (dark navy) -->
+          <path d="M257,126 L245,222 L315,222 L303,126 Z" fill="#162848"/>
+          <!-- Lapels -->
+          <path d="M257,126 L270,126 L267,158 Z" fill="#0f1e35"/>
+          <path d="M303,126 L290,126 L293,158 Z" fill="#0f1e35"/>
+          <!-- White shirt/collar -->
+          <path d="M270,126 L280,134 L290,126 L290,121 Q280,126 270,121 Z" fill="#f0ece4"/>
+          <!-- Gold tie -->
+          <path d="M277,134 L275,170 L280,177 L285,170 L283,134 Q280,131 277,134 Z" fill="#c4962a"/>
+          <path d="M276,134 Q280,130 284,134 L282,138 L278,138 Z" fill="#a87820"/>
+          <!-- Pocket square -->
+          <path d="M258,142 L265,138 L266,146 L260,148 Z" fill="white" opacity="0.5"/>
+          <!-- Buttons -->
+          <circle cx="280" cy="188" r="2" fill="rgba(255,255,255,0.15)"/>
+          <circle cx="280" cy="198" r="2" fill="rgba(255,255,255,0.15)"/>
+          <!-- Left arm extended -->
+          <path d="M257,137 Q223,150 195,162" stroke="#162848" stroke-width="14" stroke-linecap="round" fill="none"/>
+          <!-- Shirt cuff -->
+          <path d="M213,155 Q200,160 195,163" stroke="#e8e4dc" stroke-width="9" stroke-linecap="round" fill="none"/>
+          <!-- Wrist -->
+          <path d="M198,161 Q193,163 190,165" stroke="#c8956a" stroke-width="8" stroke-linecap="round" fill="none"/>
+          <!-- Right arm at side -->
+          <path d="M303,137 L316,182" stroke="#162848" stroke-width="14" stroke-linecap="round" fill="none"/>
+
+          <!-- HANDSHAKE (center glow + clasped hands) -->
+          <circle cx="190" cy="164" r="52" fill="url(#hglow)"/>
+          <ellipse cx="190" cy="165" rx="18" ry="12" fill="#b07848"/>
+          <ellipse cx="190" cy="162" rx="15" ry="9" fill="#c8956a" opacity="0.72"/>
+          <ellipse cx="188" cy="160" rx="9" ry="5" fill="#d4a870" opacity="0.5"/>
+          <!-- Sparkles -->
+          <circle cx="160" cy="148" r="3.5" fill="#c4962a"/>
+          <circle cx="220" cy="148" r="3.5" fill="#c4962a"/>
+          <circle cx="150" cy="167" r="2.5" fill="#c4962a" opacity="0.72"/>
+          <circle cx="230" cy="167" r="2.5" fill="#c4962a" opacity="0.72"/>
+          <circle cx="174" cy="136" r="2.5" fill="#c4962a" opacity="0.85"/>
+          <circle cx="206" cy="136" r="2.5" fill="#c4962a" opacity="0.85"/>
+          <circle cx="186" cy="128" r="2" fill="#c4962a" opacity="0.65"/>
+          <circle cx="194" cy="128" r="2" fill="#c4962a" opacity="0.65"/>
+          <!-- Outer ring -->
+          <ellipse cx="190" cy="164" rx="24" ry="15" fill="none" stroke="rgba(196,150,42,0.28)" stroke-width="1.5"/>
+        </svg>
+        <div style="padding:22px 26px 28px;">
+          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(196,150,42,0.7);margin-bottom:8px;">01 — The Partnership</div>
+          <h4 style="font-family:'Playfair Display',serif;font-size:18px;color:white;font-weight:600;margin-bottom:8px;">The Halal Deal</h4>
+          <p style="font-size:13px;color:rgba(255,255,255,0.45);line-height:1.75;font-weight:300;">Two worlds united by shared values — East meets West, closing ethical, interest-free real estate deals with integrity and faith.</p>
+        </div>
+      </div>
+
+      <!-- PANEL 2: REAL ESTATE INVESTMENT -->
+      <div class="vis-card" onmouseover="this.style.borderColor='rgba(196,150,42,0.5)';this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.borderColor='rgba(196,150,42,0.18)';this.style.background='rgba(255,255,255,0.03)'">
+        <svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+          <defs>
+            <marker id="arrowG" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0,0 L0,8 L8,4 Z" fill="#c4962a"/>
+            </marker>
+          </defs>
+          <rect x="0" y="0" width="380" height="260" fill="rgba(8,15,28,0.35)"/>
+
+          <!-- BEFORE house (left, dilapidated, dashed) -->
+          <rect x="18" y="152" width="82" height="68" fill="rgba(36,58,94,0.45)" rx="1" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <polygon points="8,152 59,108 110,152" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <rect x="46" y="185" width="18" height="35" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+          <rect x="24" y="163" width="22" height="16" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="1" rx="1"/>
+          <rect x="65" y="163" width="22" height="16" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="1" rx="1"/>
+          <!-- Crack marks (worn) -->
+          <line x1="30" y1="167" x2="35" y2="175" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+          <line x1="71" y1="165" x2="75" y2="173" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+          <line x1="50" y1="160" x2="52" y2="170" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+          <!-- X mark on window (broken) -->
+          <line x1="26" y1="165" x2="44" y2="177" stroke="rgba(255,80,80,0.25)" stroke-width="1"/>
+          <line x1="44" y1="165" x2="26" y2="177" stroke="rgba(255,80,80,0.25)" stroke-width="1"/>
+          <text x="59" y="235" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.28)" font-family="DM Sans,sans-serif" letter-spacing="2">BEFORE</text>
+
+          <!-- INVESTMENT FLOW arrow -->
+          <path d="M118,178 Q190,140 260,168" stroke="rgba(196,150,42,0.22)" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#arrowG)"/>
+
+          <!-- Coins floating (halal investment) -->
+          <circle cx="142" cy="170" r="13" fill="#c4962a" opacity="0.92"/>
+          <circle cx="142" cy="170" r="10" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.2"/>
+          <text x="142" y="175" text-anchor="middle" font-size="12" fill="#0f1e35" font-weight="bold" font-family="DM Sans,sans-serif">$</text>
+          <circle cx="171" cy="157" r="13" fill="#c4962a"/>
+          <circle cx="171" cy="157" r="10" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.2"/>
+          <text x="171" y="162" text-anchor="middle" font-size="12" fill="#0f1e35" font-weight="bold" font-family="DM Sans,sans-serif">$</text>
+          <circle cx="200" cy="146" r="13" fill="#d4a84b"/>
+          <circle cx="200" cy="146" r="10" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.2"/>
+          <text x="200" y="151" text-anchor="middle" font-size="12" fill="#0f1e35" font-weight="bold" font-family="DM Sans,sans-serif">$</text>
+          <!-- Halal label above coins -->
+          <rect x="155" y="110" width="52" height="22" rx="11" fill="rgba(196,150,42,0.18)" stroke="rgba(196,150,42,0.45)" stroke-width="1"/>
+          <text x="181" y="125" text-anchor="middle" font-size="9" fill="#c4962a" font-family="DM Sans,sans-serif" letter-spacing="1.5" font-weight="500">HALAL</text>
+
+          <!-- AFTER house (right, renovated, solid) -->
+          <rect x="258" y="150" width="104" height="70" fill="#243a5e" rx="2"/>
+          <polygon points="250,150 310,98 370,150" fill="#c4962a"/>
+          <!-- Roof ridge -->
+          <line x1="310" y1="98" x2="310" y2="114" stroke="rgba(255,255,255,0.28)" stroke-width="1.5"/>
+          <!-- Foundation -->
+          <rect x="256" y="218" width="116" height="6" fill="rgba(196,150,42,0.35)" rx="1"/>
+          <!-- Nice door -->
+          <rect x="295" y="182" width="26" height="38" fill="#0f1e35" rx="2"/>
+          <circle cx="318" cy="201" r="2.5" fill="#c4962a"/>
+          <!-- Door window -->
+          <rect x="299" y="186" width="8" height="10" fill="rgba(196,150,42,0.25)" rx="1"/>
+          <rect x="311" y="186" width="8" height="10" fill="rgba(196,150,42,0.25)" rx="1"/>
+          <!-- Windows lit warm -->
+          <rect x="265" y="163" width="24" height="18" fill="#d4a84b" opacity="0.38" rx="1"/>
+          <rect x="332" y="163" width="24" height="18" fill="#d4a84b" opacity="0.38" rx="1"/>
+          <line x1="277" y1="163" x2="277" y2="181" stroke="rgba(196,150,42,0.5)" stroke-width="1"/>
+          <line x1="265" y1="172" x2="289" y2="172" stroke="rgba(196,150,42,0.5)" stroke-width="1"/>
+          <line x1="344" y1="163" x2="344" y2="181" stroke="rgba(196,150,42,0.5)" stroke-width="1"/>
+          <line x1="332" y1="172" x2="356" y2="172" stroke="rgba(196,150,42,0.5)" stroke-width="1"/>
+          <!-- ROI badge above roof -->
+          <circle cx="310" cy="82" r="19" fill="rgba(196,150,42,0.9)"/>
+          <text x="310" y="79" text-anchor="middle" font-size="8" fill="#0f1e35" font-weight="bold" font-family="DM Sans,sans-serif">HIGH</text>
+          <text x="310" y="90" text-anchor="middle" font-size="8" fill="#0f1e35" font-weight="bold" font-family="DM Sans,sans-serif">ROI</text>
+          <!-- Up arrow on badge -->
+          <path d="M310,72 L310,62 L307,66 M310,62 L313,66" stroke="#0f1e35" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <text x="310" y="235" text-anchor="middle" font-size="9" fill="rgba(196,150,42,0.7)" font-family="DM Sans,sans-serif" letter-spacing="2">AFTER</text>
+
+          <!-- Ground line -->
+          <line x1="0" y1="222" x2="380" y2="222" stroke="rgba(196,150,42,0.22)" stroke-width="1"/>
+          <rect x="0" y="222" width="380" height="38" fill="rgba(6,12,26,0.55)"/>
+
+          <!-- Growth bar chart bottom left -->
+          <rect x="25" y="202" width="8" height="20" fill="rgba(196,150,42,0.25)" rx="1"/>
+          <rect x="36" y="194" width="8" height="28" fill="rgba(196,150,42,0.4)" rx="1"/>
+          <rect x="47" y="184" width="8" height="38" fill="rgba(196,150,42,0.58)" rx="1"/>
+          <rect x="58" y="172" width="8" height="50" fill="rgba(196,150,42,0.75)" rx="1"/>
+          <rect x="69" y="160" width="8" height="62" fill="#c4962a" rx="1"/>
+        </svg>
+        <div style="padding:22px 26px 28px;">
+          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(196,150,42,0.7);margin-bottom:8px;">02 — The Investment</div>
+          <h4 style="font-family:'Playfair Display',serif;font-size:18px;color:white;font-weight:600;margin-bottom:8px;">Halal Real Estate Returns</h4>
+          <p style="font-size:13px;color:rgba(255,255,255,0.45);line-height:1.75;font-weight:300;">Distressed property becomes a premium home. Every dollar grows through ethical construction, flipping, and development — completely riba-free.</p>
+        </div>
+      </div>
+
+      <!-- PANEL 3: GROWING COMMUNITY -->
+      <div class="vis-card" onmouseover="this.style.borderColor='rgba(196,150,42,0.5)';this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.borderColor='rgba(196,150,42,0.18)';this.style.background='rgba(255,255,255,0.03)'">
+        <svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+          <defs>
+            <linearGradient id="nightSky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#05101f"/>
+              <stop offset="100%" stop-color="#102035"/>
+            </linearGradient>
+          </defs>
+          <rect x="0" y="0" width="380" height="260" fill="url(#nightSky)"/>
+
+          <!-- Stars -->
+          <circle cx="38" cy="20" r="1.5" fill="white" opacity="0.7"/>
+          <circle cx="82" cy="11" r="1" fill="white" opacity="0.55"/>
+          <circle cx="128" cy="26" r="1.5" fill="white" opacity="0.62"/>
+          <circle cx="183" cy="16" r="1" fill="white" opacity="0.5"/>
+          <circle cx="222" cy="34" r="1.5" fill="white" opacity="0.68"/>
+          <circle cx="66" cy="40" r="1" fill="white" opacity="0.45"/>
+          <circle cx="152" cy="44" r="1" fill="white" opacity="0.5"/>
+          <circle cx="278" cy="14" r="1.5" fill="white" opacity="0.62"/>
+          <circle cx="348" cy="28" r="1" fill="white" opacity="0.48"/>
+          <circle cx="240" cy="20" r="1" fill="white" opacity="0.4"/>
+          <circle cx="100" cy="50" r="1" fill="white" opacity="0.38"/>
+
+          <!-- Crescent moon -->
+          <circle cx="328" cy="40" r="23" fill="#c4962a" opacity="0.9"/>
+          <circle cx="339" cy="35" r="19" fill="#05101f"/>
+          <!-- Star of David / Islamic star beside crescent -->
+          <path d="M358,24 L360,31 L367,31 L361,35 L363,42 L358,38 L353,42 L355,35 L349,31 L356,31 Z" fill="#c4962a" opacity="0.88"/>
+
+          <!-- Small house left -->
+          <rect x="10" y="170" width="72" height="50" fill="#1a2f4e" rx="1"/>
+          <polygon points="3,170 46,130 89,170" fill="#c4962a" opacity="0.8"/>
+          <rect x="32" y="195" width="16" height="25" fill="#0d1b2e" rx="1"/>
+          <rect x="14" y="180" width="18" height="14" fill="#d4a84b" opacity="0.3" rx="1"/>
+          <rect x="56" y="180" width="18" height="14" fill="#d4a84b" opacity="0.3" rx="1"/>
+          <line x1="23" y1="180" x2="23" y2="194" stroke="rgba(196,150,42,0.38)" stroke-width="1"/>
+          <line x1="14" y1="187" x2="32" y2="187" stroke="rgba(196,150,42,0.38)" stroke-width="1"/>
+          <line x1="65" y1="180" x2="65" y2="194" stroke="rgba(196,150,42,0.38)" stroke-width="1"/>
+          <line x1="56" y1="187" x2="74" y2="187" stroke="rgba(196,150,42,0.38)" stroke-width="1"/>
+          <!-- Growth arrow small house -->
+          <path d="M46,122 L46,110 L43,114 M46,110 L49,114" stroke="rgba(196,150,42,0.55)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <!-- Medium house center -->
+          <rect x="130" y="157" width="90" height="63" fill="#243a5e" rx="1"/>
+          <polygon points="122,157 175,113 228,157" fill="#c4962a" opacity="0.92"/>
+          <rect x="162" y="185" width="22" height="35" fill="#0d1b2e" rx="1"/>
+          <circle cx="181" cy="203" r="2.2" fill="#c4962a"/>
+          <rect x="137" y="169" width="23" height="17" fill="#d4a84b" opacity="0.35" rx="1"/>
+          <rect x="199" y="169" width="23" height="17" fill="#d4a84b" opacity="0.35" rx="1"/>
+          <line x1="149" y1="169" x2="149" y2="186" stroke="rgba(196,150,42,0.42)" stroke-width="1"/>
+          <line x1="137" y1="178" x2="160" y2="178" stroke="rgba(196,150,42,0.42)" stroke-width="1"/>
+          <line x1="211" y1="169" x2="211" y2="186" stroke="rgba(196,150,42,0.42)" stroke-width="1"/>
+          <line x1="199" y1="178" x2="222" y2="178" stroke="rgba(196,150,42,0.42)" stroke-width="1"/>
+          <!-- Growth arrow medium house -->
+          <path d="M175,105 L175,91 L172,96 M175,91 L178,96" stroke="rgba(196,150,42,0.78)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <!-- Large building right -->
+          <rect x="268" y="142" width="106" height="78" fill="#1a2f4e" rx="1"/>
+          <polygon points="260,142 321,94 382,142" fill="#c4962a"/>
+          <rect x="304" y="178" width="24" height="42" fill="#0d1b2e" rx="1"/>
+          <circle cx="325" cy="200" r="2.5" fill="#c4962a"/>
+          <rect x="275" y="155" width="22" height="17" fill="#d4a84b" opacity="0.38" rx="1"/>
+          <rect x="306" y="155" width="22" height="17" fill="#d4a84b" opacity="0.38" rx="1"/>
+          <rect x="337" y="155" width="22" height="17" fill="#d4a84b" opacity="0.38" rx="1"/>
+          <line x1="286" y1="155" x2="286" y2="172" stroke="rgba(196,150,42,0.44)" stroke-width="1"/>
+          <line x1="275" y1="164" x2="297" y2="164" stroke="rgba(196,150,42,0.44)" stroke-width="1"/>
+          <line x1="317" y1="155" x2="317" y2="172" stroke="rgba(196,150,42,0.44)" stroke-width="1"/>
+          <line x1="306" y1="164" x2="328" y2="164" stroke="rgba(196,150,42,0.44)" stroke-width="1"/>
+          <line x1="348" y1="155" x2="348" y2="172" stroke="rgba(196,150,42,0.44)" stroke-width="1"/>
+          <line x1="337" y1="164" x2="359" y2="164" stroke="rgba(196,150,42,0.44)" stroke-width="1"/>
+          <!-- Growth arrow large house (biggest, brightest) -->
+          <path d="M321,86 L321,70 L317,75 M321,70 L325,75" stroke="#c4962a" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <!-- Trees -->
+          <rect x="93" y="198" width="5" height="22" fill="#3a220d"/>
+          <ellipse cx="95" cy="188" rx="14" ry="16" fill="#1a4530"/>
+          <rect x="250" y="202" width="4" height="18" fill="#3a220d"/>
+          <ellipse cx="252" cy="193" rx="12" ry="14" fill="#1a4530"/>
+
+          <!-- Ground -->
+          <line x1="0" y1="222" x2="380" y2="222" stroke="rgba(196,150,42,0.25)" stroke-width="1"/>
+          <rect x="0" y="222" width="380" height="38" fill="rgba(4,10,20,0.65)"/>
+
+          <!-- Family silhouettes (man + woman + child) in front of center house -->
+          <!-- Man -->
+          <ellipse cx="161" cy="214" rx="7" ry="5.5" fill="rgba(196,150,42,0.62)"/>
+          <rect x="155" y="219" width="12" height="13" fill="rgba(196,150,42,0.52)" rx="1"/>
+          <!-- Woman -->
+          <ellipse cx="179" cy="215" rx="6" ry="5" fill="rgba(196,150,42,0.55)"/>
+          <path d="M173,220 Q179,218 185,220 L185,232 L173,232 Z" fill="rgba(196,150,42,0.45)"/>
+          <!-- Child -->
+          <ellipse cx="170" cy="218" rx="4.5" ry="4" fill="rgba(196,150,42,0.5)"/>
+          <rect x="166" y="222" width="9" height="10" fill="rgba(196,150,42,0.4)" rx="1"/>
+
+          <!-- Subtle tagline -->
+          <text x="190" y="62" text-anchor="middle" font-size="8" fill="rgba(196,150,42,0.35)" font-family="DM Sans,sans-serif" letter-spacing="3">ETHICAL GROWTH</text>
+        </svg>
+        <div style="padding:22px 26px 28px;">
+          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(196,150,42,0.7);margin-bottom:8px;">03 — The Legacy</div>
+          <h4 style="font-family:'Playfair Display',serif;font-size:18px;color:white;font-weight:600;margin-bottom:8px;">A Thriving Community</h4>
+          <p style="font-size:13px;color:rgba(255,255,255,0.45);line-height:1.75;font-weight:300;">Muslim families owning homes, building wealth, raising children in communities we built together — this is the legacy TUC is creating.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
      CTA BANNER
 ═══════════════════════════════════════════════ -->
 <div class="cta-banner">
@@ -878,6 +1494,17 @@
 </footer>
 
 <script>
+  /* ─── HAMBURGER ─── */
+  function toggleMenu() {
+    var hb = document.getElementById('hamburger');
+    var mm = document.getElementById('mobileMenu');
+    hb.classList.toggle('open');
+    mm.classList.toggle('open');
+    document.body.classList.toggle('modal-open', mm.classList.contains('open'));
+  }
+  // Close mobile menu on resize
+  window.addEventListener('resize', function(){ if(window.innerWidth > 900){ var mm=document.getElementById('mobileMenu'); var hb=document.getElementById('hamburger'); if(mm){ mm.classList.remove('open'); hb.classList.remove('open'); document.body.classList.remove('modal-open'); }}});
+
   /* ─── SCROLL REVEAL ─── */
   const reveals = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver(entries => {
